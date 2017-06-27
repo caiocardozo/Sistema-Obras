@@ -1,0 +1,956 @@
+<div class="content-wrapper">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-lg-10">
+                    <h4>
+                        Obra : {{ localBd }}
+                    </h4>
+                </div>
+                <div class="col-lg-offset-10">
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content-header ">
+        <div class="row">
+            <div class="box box-solid">
+                <div class="form-group">
+                    <label class="control-label col-md-2">Selecione a licitação</label>
+                    <div class="col-lg-3">
+                        <select class="form-control" [(ngModel)]="select" (change)="selectBidding()">
+                            <option *ngFor="let biddingItem of biddingsConstruction"
+                                [ngValue]="biddingItem.id">
+                                {{ biddingItem.biddingShoppingPortalId }} - {{ biddingItem.spBidding.number }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content-header">
+        <div class="row">
+            <div class="box box-primary" *ngIf="bidding != null">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Licitação -- Id: {{ bidding.id }} -- {{ bidding.amount | currency:'BRL' :true }}
+                    </h3>
+                    <div class="pull-right box-tools">
+                        <a class="btn btn-large btn-primary" (click)='showModal("rateioLic")'><i class="fa fa-plus"></i> Novo rateio</a>
+                        <a class="btn btn-large btn-primary" (click)='showModal("contract")'><i class="fa fa-plus"></i> Novo contrato</a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>O.C.</th>
+                                <th>Emissão</th>
+                                <th>Serviço</th>
+                                <th>Projeto</th>
+                                <th>Conta financeira</th>
+                                <th>Centro de custo</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of bidding.biddingApportionment">
+                                <td>{{ item.purchaseOrderNumber }}</td>
+                                <td *ngIf="item.dateOfIssue === '0001-01-01T00:00:00'"></td>
+                                <td *ngIf="item.dateOfIssue !== '0001-01-01T00:00:00'">{{ item.dateOfIssue | date: 'dd/MM/yyyy' }}</td>
+                                <td>{{ item.serviceCode }}</td>
+                                <td>{{ item.projectNumber }}</td>
+                                <td>{{ item.financialAccountCode }}</td>
+                                <td>{{ item.costCenterCode }}</td>
+                                <td>{{ item.apportionmentValue | currency:'BRL' :true }} -- {{ item.itemSequence }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content-header" *ngIf="bidding != null">
+        <div class="row">
+            <div class="box box-success" *ngFor="let contract of contractsConstruction">
+                <div class="box-header">
+                    <h4 class="box-title">
+                        <div class="col-lg-3"><strong>Tipo: </strong> {{ contract.typeOfContract.description }}</div>
+                        <div class="col-lg-3"><strong>Prazo </strong> {{ contract.deadline }} -- <strong>Área </strong> {{ contract.area }}</div>
+                        <div class="col-lg-3"><strong>Assinatura </strong> {{ contract.signatureDate | date: 'dd/MM/yyyy' }}</div>
+                        <div class="col-lg-3 text-left"><strong>Valor: </strong>{{ contract.contractValue | currency:'BRL' :true }}</div>
+                    </h4>
+                    <div class="pull-right box-tools">
+                        <a class="btn btn-large btn-primary" (click)='showModalContractA("contractA", contract.id, contract.typeOfContract.id)'><i class="fa fa-plus"></i> Novo rateio {{contract.id}}</a>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Emissão</th>
+                                    <th>Serviço</th>
+                                    <th>Projeto</th>
+                                    <th>Conta financeira</th>
+                                    <th>Centro de custo</th>
+                                    <th>Valor</th>
+                                    <th>Medições</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let itemContract of contract.contractApportionment">
+                                    <td>{{ itemContract.id }}</td>
+                                    <td *ngIf="itemContract.dateOfIssue === '0001-01-01T00:00:00'"></td>
+                                    <td *ngIf="itemContract.dateOfIssue !== '0001-01-01T00:00:00'">{{ itemContract.dateOfIssue | date: 'dd/MM/yyyy' }}</td>
+                                    <td>{{ itemContract.serviceCode }}</td>
+                                    <td>{{ itemContract.projectNumber }}</td>
+                                    <td>{{ itemContract.financialAccountCode }}</td>
+                                    <td>{{ itemContract.costCenterCode }}</td>
+                                    <td>{{ itemContract.apportionmentValue | currency:'BRL' :true }}</td>
+                                    <td>
+                                        <a class="btn btn-social-icon btn-info" (click)="showModalMeasurement(itemContract.id,contract.id, contract.typeOfContractId)" title="Medição">
+                                            <i class="fa fa-plus-square-o"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info btn-social-icon" (click)="showModalMeasurements(itemContract.id,contract.id)" title="Medição">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="myModal" class="modal fade in" [ngStyle]="{'display': modalVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("rateioLic")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar rateio para licitação</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form novalidate (ngSubmit)="addBiddingA()" [formGroup]="biddingApportionmentForm">
+                                    <div class="form-horizontal">
+                                        <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                            <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                            <ul>
+                                                <li *ngFor="let error of errors">{{ error }}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.companyCode }">
+                                                    <label class="control-label" for="companyCode">Código da empresa</label>
+                                                    <input class="form-control" id="companyCode" type="text" placeholder="empresa" formControlName="companyCode" />
+                                                    <span class="help-block" *ngIf="displayMessage.companyCode">
+                                                             <p [innerHTML]="displayMessage.companyCode"></p>
+                                                        </span>
+                                                </div>
+
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.affiliateCode }">
+                                                    <label class="control-label">Código da filial</label>
+                                                    <input class="form-control" type="text" placeholder="filial" formControlName="affiliateCode" />
+                                                    <span class="help-block" *ngIf="displayMessage.affiliateCode">
+                                                            <p [innerHTML]="displayMessage.affiliateCode"></p>
+                                                        </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.serviceCode }">
+                                                    <label class="control-label">Código do serviço</label>
+                                                    <input class="form-control" type="text" placeholder="0" formControlName="serviceCode" />
+                                                    <span class="help-block" *ngIf="displayMessage.serviceCode">
+                                                            <p [innerHTML]="displayMessage.serviceCode"></p>
+                                                        </span>
+                                                </div>
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.apportionmentValue }">
+                                                    <label class="control-label">Valor do rateio</label>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue" />
+                                                    <span class="help-block" *ngIf="displayMessage.apportionmentValue">
+                                                            <p [innerHTML]="displayMessage.apportionmentValue"></p>
+                                                        </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-3" [ngClass]="{'has-error': displayMessage.projectNumber }">
+                                                    <label class="control-label">Número do Projeto</label>
+                                                    <input class="form-control" type="text" placeholder="0" formControlName="projectNumber" />
+                                                    <span class="help-block" *ngIf="displayMessage.projectNumber">
+                                                            <p [innerHTML]="displayMessage.projectNumber"></p>
+                                                        </span>
+                                                </div>
+                                                <div class="col-md-3" [ngClass]="{'has-error': displayMessage.projectPhaseCode }">
+                                                    <label class="control-label">Fase</label>
+                                                    <input class="form-control" type="text" placeholder="0" formControlName="projectPhaseCode" />
+                                                    <span class="help-block" *ngIf="displayMessage.projectPhaseCode">
+                                                            <p [innerHTML]="displayMessage.projectPhaseCode"></p>
+                                                        </span>
+                                                </div>
+                                                <div class="col-md-3" [ngClass]="{'has-error': displayMessage.financialAccountCode }">
+                                                    <label class="control-label">Conta financeira</label>
+                                                    <input class="form-control" type="text" placeholder="0" formControlName="financialAccountCode" />
+                                                    <span class="help-block" *ngIf="displayMessage.financialAccountCode">
+                                                             <p [innerHTML]="displayMessage.financialAccountCode"></p>
+                                                        </span>
+                                                </div>
+                                                <div class="col-md-3" [ngClass]="{'has-error': displayMessage.costCenterCode }">
+                                                    <label class="control-label">Prazo de execução</label>
+                                                    <input class="form-control" type="text" placeholder="0" formControlName="costCenterCode" />
+                                                    <span class="help-block" *ngIf="displayMessage.costCenterCode">
+                                                                <p [innerHTML]="displayMessage.costCenterCode"></p>
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="box-footer text-center">
+                                    <button type="submit" class="btn btn-default" (click)='hideModal("rateioLic")'>Cancelar</button>
+                                    <button type="submit" class="btn btn-primary" (click)="addBiddingA()" [disabled]='!biddingApportionmentForm.valid'>Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalContract" class="modal fade in" [ngStyle]="{'display': modalContractVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("contract")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar contrato para licitação</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form (ngSubmit)="addContract()" [formGroup]="contractForm" class="form-horizontal">
+                                    <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                        <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                        <ul>
+                                            <li *ngFor="let error of errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div [ngClass]="{'has-error': displayMessage.typeOfContractId }">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Tipo de contrato</label>
+                                                    <select class="form-control" formControlName="typeOfContractId">
+                                                         <option *ngFor="let item of typeOfContract;" [value]="item.id">
+                                                            {{item.description}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="help-block" *ngIf="displayMessage.typeOfContractId">
+                                                      <p [innerHTML]="displayMessage.typeOfContractId"></p>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.vendorCode }">
+                                                <label class="control-label">Código do fornecedor</label>
+                                                <input class="form-control" type="text" placeholder="código do fornecedor" formControlName="vendorCode" />
+                                                <span class="help-block" *ngIf="displayMessage.vendorCode">
+                                                        <p [innerHTML]="displayMessage.vendorCode"></p>
+                                               </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="control-label">Assinatura</label>
+                                                <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
+                                                <my-date-picker name="signatureDate" [options]="myDatePickerOptions" formControlName="signatureDate"></my-date-picker>
+                                                <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
+                                                <span class="help-block" *ngIf="displayMessage.signatureDate">
+                                                        <p [innerHTML]="displayMessage.signatureDate"></p>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div [ngClass]="{'has-error': displayMessage.signatureDate }">
+                                                <div [ngClass]="{'has-error': displayMessage.contractDuration }">
+                                                    <div class="col-md-3">
+                                                        <label class="control-label">Duração</label>
+                                                        <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
+                                                        <my-date-picker name="contractDuration" [options]="myDatePickerOptions" formControlName="contractDuration"></my-date-picker>
+                                                        <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
+                                                        <span class="help-block" *ngIf="displayMessage.contractDuration">
+                                                            <p [innerHTML]="displayMessage.contractDuration"></p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2" [ngClass]="{'has-error': displayMessage.contractValue }">
+                                                    <label class="control-label">Valor</label>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="contractValue" />
+                                                    <span class="help-block" *ngIf="displayMessage.contractValue">
+                                                    <p [innerHTML]="displayMessage.contractValue"></p>
+                                               </span>
+                                                </div>
+                                                <div class="col-md-2" [ngClass]="{'has-error': displayMessage.deadline }">
+                                                    <label class="control-label">Prazo em dias</label>
+                                                    <input class="form-control" type="text" placeholder="número de dias" formControlName="deadline" />
+                                                    <span class="help-block" *ngIf="displayMessage.deadline">
+                                                    <p [innerHTML]="displayMessage.deadline"></p>
+                                                </span>
+                                                </div>
+                                                <div class="col-md-2" [ngClass]="{'has-error': displayMessage.area }">
+                                                    <label class="control-label">Área</label>
+                                                    <input class="form-control" type="text" placeholder="área de obra" formControlName="area" />
+                                                    <span class="help-block" *ngIf="displayMessage.area">
+                                                    <p [innerHTML]="displayMessage.area"></p>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12" [ngClass]="{'has-error': displayMessage.comments }">
+                                            <label class="control-label">Comentários</label>
+                                            <textarea class="form-control" type="textarea" rows="5" placeholder="comentários" formControlName="comments"></textarea>
+                                            <span class="help-block" *ngIf="displayMessage.comments">
+                                                <p [innerHTML]="displayMessage.comments"></p>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </form>
+                                <div class="box-footer text-center">
+                                    <button type="submit" class="btn btn-default" (click)='hideModal("contract")'>Cancelar</button>
+                                    <button type="submit" class="btn btn-primary" (click)="addContract()" [disabled]='!contractForm.valid'>Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalContractA" class="modal fade in" [ngStyle]="{'display': modalContractAVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("contractA")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar rateio para contrato</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form (ngSubmit)="addContractA()" [formGroup]="contractAForm" class="form-horizontal">
+                                    <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                        <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                        <ul>
+                                            <li *ngFor="let error of errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.companyCode }">
+                                                <label class="control-label" for="companyCode">Código da empresa</label>
+                                                <input class="form-control" id="companyCode" type="text" placeholder="empresa" formControlName="companyCode" />
+                                                <span class="help-block" *ngIf="displayMessage.companyCode">
+                                            <p [innerHTML]="displayMessage.companyCode"></p>
+                                        </span>
+                                            </div>
+
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.affiliateCode }">
+                                                <label class="control-label">Código da filial</label>
+                                                <input class="form-control" type="number" placeholder="filial" formControlName="affiliateCode" />
+                                                <span class="help-block" *ngIf="displayMessage.affiliateCode">
+                                            <p [innerHTML]="displayMessage.affiliateCode"></p>
+                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.serviceCode }">
+                                                <label class="control-label">Código do serviço</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="serviceCode" />
+                                                <span class="help-block" *ngIf="displayMessage.serviceCode">
+                                                <p [innerHTML]="displayMessage.serviceCode"></p>
+                                            </span>
+                                            </div>
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.apportionmentValue }">
+                                                <label class="control-label">Valor do rateio</label>
+                                                <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue" value="{{ apportionmentValue | currency:'BRL':true }}"
+                                                />
+                                                <span class="help-block" *ngIf="displayMessage.apportionmentValue">
+                                            <p [innerHTML]="displayMessage.apportionmentValue"></p>
+                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.projectNumber }">
+                                                <label class="control-label">Número do Projeto</label>
+                                                <input class="form-control" type="number" placeholder="0" formControlName="projectNumber" />
+                                                <span class="help-block" *ngIf="displayMessage.projectNumber">
+                                            <p [innerHTML]="displayMessage.projectNumber"></p>
+                                    </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.projectPhaseCode }">
+                                                <label class="control-label">Fase</label>
+                                                <input class="form-control" type="number" placeholder="0" formControlName="projectPhaseCode" />
+                                                <span class="help-block" *ngIf="displayMessage.projectPhaseCode">
+                                            <p [innerHTML]="displayMessage.projectPhaseCode"></p>
+                                    </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.financialAccountCode }">
+                                                <label class="control-label">Conta financeira</label>
+                                                <input class="form-control" type="number" placeholder="0" formControlName="financialAccountCode" />
+                                                <span class="help-block" *ngIf="displayMessage.financialAccountCode">
+                                            <p [innerHTML]="displayMessage.financialAccountCode"></p>
+                                    </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.costCenterCode }">
+                                                <label class="control-label">Prazo de execução</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="costCenterCode" />
+                                                <span class="help-block" *ngIf="displayMessage.costCenterCode">
+                                            <p [innerHTML]="displayMessage.costCenterCode"></p>
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="box-footer text-center">
+                                    <button type="submit" class="btn btn-default" (click)='hideModal("contractA")'>Cancelar</button>
+                                    <button type="submit" class="btn btn-primary" (click)="addContractA()" [disabled]='!contractAForm.valid'>Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalMeasurement" class="modal fade in" [ngStyle]="{'display': modalMeasurementVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("measurement")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar rateio para o contrato nº {{ contractId }} - rateio nº {{ apportionmentId }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form (ngSubmit)="addMeasurement()" [formGroup]="measurementForm" class="form-horizontal">
+                                    <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                        <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                        <ul>
+                                            <li *ngFor="let error of errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div [ngClass]="{'has-error': displayMessage.supervisorId }">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Supervisor</label>
+                                                    <select class="form-control" formControlName="supervisorId">
+                                                <option *ngFor="let item of supervisors;" [value]="item.id">
+                                                    {{ item.name }}
+                                                </option>
+                                            </select>
+                                                    <span class="help-block" *ngIf="displayMessage.supervisorId">
+                                                <p [innerHTML]="displayMessage.supervisorId"></p>
+                                            </span>
+                                                </div>
+                                            </div>
+                                            <div [ngClass]="{'has-error': displayMessage.date }">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Data</label>
+                                                    <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
+                                                    <my-date-picker name="date" [options]="myDatePickerOptions" formControlName="date"></my-date-picker>
+                                                    <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
+                                                    <span class="help-block" *ngIf="displayMessage.date">
+                                                    <p [innerHTML]="displayMessage.date"></p>
+                                            </span>
+                                                </div>
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.value }">
+                                                    <label class="control-label">Valor</label>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="value" value="{{ value | currency:'BRL':true }}"
+                                                    />
+                                                    <span class="help-block" *ngIf="displayMessage.value">
+                                                <p [innerHTML]="displayMessage.value"></p>
+                                            </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12" [ngClass]="{'has-error': displayMessage.comments }">
+                                                <label class="control-label">Comentários</label>
+                                                <textarea class="form-control" type="textarea" rows="5" placeholder="comentários" formControlName="comments"></textarea>
+                                                <span class="help-block" *ngIf="displayMessage.comments">
+                                                <p [innerHTML]="displayMessage.comments"></p>
+                                            </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.chit }">
+                                                <label class="control-label">Nota fiscal serviço</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="chit" />
+                                                <span class="help-block" *ngIf="displayMessage.chit">
+                                                <p [innerHTML]="displayMessage.chit"></p>
+                                            </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.chitSeries }">
+                                                <label class="control-label">serie da nota</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="chitSeries" />
+                                                <span class="help-block" *ngIf="displayMessage.chitSeries">
+                                                <p [innerHTML]="displayMessage.chitSeries"></p>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer text-right">
+                                        <button type="submit" class="btn btn-default" (click)='hideModal("measurement")'>Voltar</button>
+                                        <button class="btn btn-primary" type="submit" [disabled]='!measurementForm.valid'>Adicionar</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalMeasurements" class="modal fade in" [ngStyle]="{'display': modalMeasurementsVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("measurements")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Visualizar medições para o rateio nº {{ apportionmentId }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <div class="box-body table-responsive no-padding" >
+                                    <table class="table table-hover" >
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">Supervisor</th>
+                                                <th class="text-left">Data medição</th>
+                                                <th class="text-center">Valor medição</th>
+                                                <th class="text-center">Rateio</th>
+                                                <th class="text-center">Nota fiscal</th>
+                                                <th class="text-center">Serie da nota</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let measurement of measurements">
+                                                <td class="text-left">{{ measurement.supervisor.name }}</td>
+                                                <td class="text-left">{{ measurement.date | date: 'dd/MM/yyyy' }}</td>
+                                                <td class="text-center">{{ measurement.value }}</td>
+                                                <td class="text-center">{{ measurement.apportionmentCode }}</td>
+                                                <td class="text-center">{{ measurement.chit }}</td>
+                                                <td class="text-center">{{ measurement.chitSeries }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                   <ng-template #empty><h2>No races.</h2></ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalEditContract" class="modal fade in" [ngStyle]="{'display': modalEditContractVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("contract")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar contrato para licitação</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form (ngSubmit)="addContract()" [formGroup]="contractForm" class="form-horizontal">
+                                    <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                        <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                        <ul>
+                                            <li *ngFor="let error of errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div [ngClass]="{'has-error': displayMessage.typeOfContractId }">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Tipo de contrato</label>
+                                                    <select class="form-control" formControlName="typeOfContractId">
+                                                         <option *ngFor="let item of typeOfContract;" [value]="item.id">
+                                                            {{item.description}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="help-block" *ngIf="displayMessage.typeOfContractId">
+                                                      <p [innerHTML]="displayMessage.typeOfContractId"></p>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.vendorCode }">
+                                                <label class="control-label">Código do fornecedor</label>
+                                                <input class="form-control" type="text" placeholder="código do fornecedor" formControlName="vendorCode" />
+                                                <span class="help-block" *ngIf="displayMessage.vendorCode">
+                                                        <p [innerHTML]="displayMessage.vendorCode"></p>
+                                               </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="control-label">Assinatura</label>
+                                                <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
+                                                <my-date-picker name="signatureDate" [options]="myDatePickerOptions" formControlName="signatureDate"></my-date-picker>
+                                                <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
+                                                <span class="help-block" *ngIf="displayMessage.signatureDate">
+                                                        <p [innerHTML]="displayMessage.signatureDate"></p>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div [ngClass]="{'has-error': displayMessage.signatureDate }">
+                                                <div [ngClass]="{'has-error': displayMessage.contractDuration }">
+                                                    <div class="col-md-3">
+                                                        <label class="control-label">Duração</label>
+                                                        <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
+                                                        <my-date-picker name="contractDuration" [options]="myDatePickerOptions" formControlName="contractDuration"></my-date-picker>
+                                                        <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
+                                                        <span class="help-block" *ngIf="displayMessage.contractDuration">
+                                                            <p [innerHTML]="displayMessage.contractDuration"></p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2" [ngClass]="{'has-error': displayMessage.contractValue }">
+                                                    <label class="control-label">Valor</label>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="contractValue" />
+                                                    <span class="help-block" *ngIf="displayMessage.contractValue">
+                                                    <p [innerHTML]="displayMessage.contractValue"></p>
+                                               </span>
+                                                </div>
+                                                <div class="col-md-2" [ngClass]="{'has-error': displayMessage.deadline }">
+                                                    <label class="control-label">Prazo em dias</label>
+                                                    <input class="form-control" type="text" placeholder="número de dias" formControlName="deadline" />
+                                                    <span class="help-block" *ngIf="displayMessage.deadline">
+                                                    <p [innerHTML]="displayMessage.deadline"></p>
+                                                </span>
+                                                </div>
+                                                <div class="col-md-2" [ngClass]="{'has-error': displayMessage.area }">
+                                                    <label class="control-label">Área</label>
+                                                    <input class="form-control" type="text" placeholder="área de obra" formControlName="area" />
+                                                    <span class="help-block" *ngIf="displayMessage.area">
+                                                    <p [innerHTML]="displayMessage.area"></p>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12" [ngClass]="{'has-error': displayMessage.comments }">
+                                            <label class="control-label">Comentários</label>
+                                            <textarea class="form-control" type="textarea" rows="5" placeholder="comentários" formControlName="comments"></textarea>
+                                            <span class="help-block" *ngIf="displayMessage.comments">
+                                                <p [innerHTML]="displayMessage.comments"></p>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </form>
+                                <div class="box-footer text-center">
+                                    <button type="submit" class="btn btn-default" (click)='hideModal("contract")'>Cancelar</button>
+                                    <button type="submit" class="btn btn-primary" (click)="addContract()" [disabled]='!contractForm.valid'>Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalEditContractA" class="modal fade in" [ngStyle]="{'display': modalContractAVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("contractA")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar rateio para contrato</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form (ngSubmit)="addContractA()" [formGroup]="contractAForm" class="form-horizontal">
+                                    <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                        <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                        <ul>
+                                            <li *ngFor="let error of errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.companyCode }">
+                                                <label class="control-label" for="companyCode">Código da empresa</label>
+                                                <input class="form-control" id="companyCode" type="text" placeholder="empresa" formControlName="companyCode" />
+                                                <span class="help-block" *ngIf="displayMessage.companyCode">
+                                            <p [innerHTML]="displayMessage.companyCode"></p>
+                                        </span>
+                                            </div>
+
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.affiliateCode }">
+                                                <label class="control-label">Código da filial</label>
+                                                <input class="form-control" type="number" placeholder="filial" formControlName="affiliateCode" />
+                                                <span class="help-block" *ngIf="displayMessage.affiliateCode">
+                                            <p [innerHTML]="displayMessage.affiliateCode"></p>
+                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.serviceCode }">
+                                                <label class="control-label">Código do serviço</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="serviceCode" />
+                                                <span class="help-block" *ngIf="displayMessage.serviceCode">
+                                                <p [innerHTML]="displayMessage.serviceCode"></p>
+                                            </span>
+                                            </div>
+                                            <div class="col-md-4" [ngClass]="{'has-error': displayMessage.apportionmentValue }">
+                                                <label class="control-label">Valor do rateio</label>
+                                                <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue" value="{{ apportionmentValue | currency:'BRL':true }}"
+                                                />
+                                                <span class="help-block" *ngIf="displayMessage.apportionmentValue">
+                                            <p [innerHTML]="displayMessage.apportionmentValue"></p>
+                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.projectNumber }">
+                                                <label class="control-label">Número do Projeto</label>
+                                                <input class="form-control" type="number" placeholder="0" formControlName="projectNumber" />
+                                                <span class="help-block" *ngIf="displayMessage.projectNumber">
+                                            <p [innerHTML]="displayMessage.projectNumber"></p>
+                                    </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.projectPhaseCode }">
+                                                <label class="control-label">Fase</label>
+                                                <input class="form-control" type="number" placeholder="0" formControlName="projectPhaseCode" />
+                                                <span class="help-block" *ngIf="displayMessage.projectPhaseCode">
+                                            <p [innerHTML]="displayMessage.projectPhaseCode"></p>
+                                    </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.financialAccountCode }">
+                                                <label class="control-label">Conta financeira</label>
+                                                <input class="form-control" type="number" placeholder="0" formControlName="financialAccountCode" />
+                                                <span class="help-block" *ngIf="displayMessage.financialAccountCode">
+                                            <p [innerHTML]="displayMessage.financialAccountCode"></p>
+                                    </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.costCenterCode }">
+                                                <label class="control-label">Prazo de execução</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="costCenterCode" />
+                                                <span class="help-block" *ngIf="displayMessage.costCenterCode">
+                                            <p [innerHTML]="displayMessage.costCenterCode"></p>
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="box-footer text-center">
+                                    <button type="submit" class="btn btn-default" (click)='hideModal("contractA")'>Cancelar</button>
+                                    <button type="submit" class="btn btn-primary" (click)="addContractA()" [disabled]='!contractAForm.valid'>Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalEditMeasurement" class="modal fade in" [ngStyle]="{'display': modalMeasurementVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("measurement")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Adicionar rateio para o contrato nº {{ contractId }} - rateio nº {{ apportionmentId }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <form (ngSubmit)="addMeasurement()" [formGroup]="measurementForm" class="form-horizontal">
+                                    <div class="alert alert-danger" *ngIf="errors.length > 0">
+                                        <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                                        <ul>
+                                            <li *ngFor="let error of errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div [ngClass]="{'has-error': displayMessage.supervisorId }">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Supervisor</label>
+                                                    <select class="form-control" formControlName="supervisorId">
+                                                <option *ngFor="let item of supervisors;" [value]="item.id">
+                                                    {{ item.name }}
+                                                </option>
+                                            </select>
+                                                    <span class="help-block" *ngIf="displayMessage.supervisorId">
+                                                <p [innerHTML]="displayMessage.supervisorId"></p>
+                                            </span>
+                                                </div>
+                                            </div>
+                                            <div [ngClass]="{'has-error': displayMessage.date }">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Data</label>
+                                                    <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
+                                                    <my-date-picker name="date" [options]="myDatePickerOptions" formControlName="date"></my-date-picker>
+                                                    <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
+                                                    <span class="help-block" *ngIf="displayMessage.date">
+                                                    <p [innerHTML]="displayMessage.date"></p>
+                                            </span>
+                                                </div>
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.value }">
+                                                    <label class="control-label">Valor</label>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="value" value="{{ value | currency:'BRL':true }}"
+                                                    />
+                                                    <span class="help-block" *ngIf="displayMessage.value">
+                                                <p [innerHTML]="displayMessage.value"></p>
+                                            </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12" [ngClass]="{'has-error': displayMessage.comments }">
+                                                <label class="control-label">Comentários</label>
+                                                <textarea class="form-control" type="textarea" rows="5" placeholder="comentários" formControlName="comments"></textarea>
+                                                <span class="help-block" *ngIf="displayMessage.comments">
+                                                <p [innerHTML]="displayMessage.comments"></p>
+                                            </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.chit }">
+                                                <label class="control-label">Nota fiscal serviço</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="chit" />
+                                                <span class="help-block" *ngIf="displayMessage.chit">
+                                                <p [innerHTML]="displayMessage.chit"></p>
+                                            </span>
+                                            </div>
+                                            <div class="col-md-3" [ngClass]="{'has-error': displayMessage.chitSeries }">
+                                                <label class="control-label">serie da nota</label>
+                                                <input class="form-control" type="text" placeholder="0" formControlName="chitSeries" />
+                                                <span class="help-block" *ngIf="displayMessage.chitSeries">
+                                                <p [innerHTML]="displayMessage.chitSeries"></p>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer text-right">
+                                        <button type="submit" class="btn btn-default" (click)='hideModal("measurement")'>Cancelar</button>
+                                        <button class="btn btn-primary" type="submit" [disabled]='!measurementForm.valid'>Adicionar</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalEditMeasurements" class="modal fade in" [ngStyle]="{'display': modalMeasurementsVisible ? 'block' : 'none'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button (click)='hideModal("measurements")' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+                <h4 class="modal-title">Visualizar medições para o rateio nº {{ apportionmentId }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <section class="row">
+                        <div class="col-lg-12">
+                            <div class="box box-primary">
+                                <div class="box-body table-responsive no-padding" >
+                                    <table class="table table-hover" >
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">Supervisor</th>
+                                                <th class="text-left">Data medição</th>
+                                                <th class="text-center">Valor medição</th>
+                                                <th class="text-center">Rateio</th>
+                                                <th class="text-center">Nota fiscal</th>
+                                                <th class="text-center">Serie da nota</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let measurement of measurements">
+                                                <td class="text-left">{{ measurement.supervisor.name }}</td>
+                                                <td class="text-left">{{ measurement.date | date: 'dd/MM/yyyy' }}</td>
+                                                <td class="text-center">{{ measurement.value }}</td>
+                                                <td class="text-center">{{ measurement.apportionmentCode }}</td>
+                                                <td class="text-center">{{ measurement.chit }}</td>
+                                                <td class="text-center">{{ measurement.chitSeries }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                   <ng-template #empty><h2>No races.</h2></ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

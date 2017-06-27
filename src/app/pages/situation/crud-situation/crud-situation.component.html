@@ -1,0 +1,134 @@
+ <section class="content-header">
+    <h1>
+      Situação da obra
+    </h1>
+  </section>
+  <section class="content-header">
+    <div class="col-lg-12">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Cadastrar</h3>
+        </div>
+        <form novalidate (ngSubmit)="insert()" [formGroup]="formSituation">
+          <div class="box-body">
+            <div class="form-group"  [ngClass]="{'has-error': displayMessage.description }">
+              <label class="control-label">Descrição</label>
+              <input type="text" class="form-control" id="description" placeholder="Descrição da situação" formControlName="description">
+              <span class="help-block" *ngIf="displayMessage.description">
+                <p [innerHTML]="displayMessage.description"></p>
+              </span>
+            </div>
+            <div class="box-footer">
+              <button type="button" class="btn btn-primary  pull-right" (click)="insert()" [disabled]="!formSituation.valid">Inserir</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Lista de situações de obra</h3>
+          <div class="box-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+              <div class="input-group-btn">
+                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tbody>
+              <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Data cadastro</th>
+                <th class="text-center">Usuário Cadastrou</th>
+                <th class="text-center">Alterar status</th>
+                <th class="text-center">Apagar</th>
+                <th class="text-center">Editar</th>
+              </tr>
+              <tr *ngFor="let situation of situations">
+                <td>{{ situation.id }} </td>
+                <td>{{ situation.description }}</td>
+                <td class="text-center" *ngIf="situation.status === 'Ativo'">
+                  <span class="label label-success">Ativo</span>
+                </td>
+                <td class="text-center" *ngIf="situation.status === 'Inativo'">
+                  <span class="label label-danger">Inativo</span>
+                </td>
+                <td class="text-center">{{ situation.dateOfGeneration | date: 'dd/MM/yyyy' }}</td>
+                <td class="text-center">{{ situation.userIdRegistered }}</td>
+                <td class="text-center">
+                  <a class="btn btn-social-icon btn-preto" (click)="updateStatus(situation.id)"><i class="fa  fa-history"></i></a>
+                </td>
+                <td class="text-center">
+                  <a class="btn btn-social-icon btn-google" (click)="remove(situation.id)"><i class="fa fa-trash"></i></a>
+                </td>
+                <td class="text-center">
+                  <a class="btn btn-social-icon btn-verde"  (click)="showModal(situation)"><i class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+  </section>
+<div id="myModal" class="modal fade in" [ngStyle]="{'display': modalVisible ? 'block' : 'none'}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button (click)='hideModal()' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+        <h4 class="modal-title">Editar tipo de obra</h4>
+      </div>
+      <form novalidate (ngSubmit)="updateSituation()" [formGroup]="editformSituation">
+        <div class="modal-body">
+          <div class="form-horizontal">
+            <div class="alert alert-danger" *ngIf="errors.length > 0">
+                <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+                <ul>
+                  <li *ngFor="let error of errors">{{ error }}</li>
+                </ul>
+              </div>
+            <div class="form-group" [ngClass]="{'has-error': editDisplayMessage.description }">
+              <label class="col-md-2 control-label">Descrição da Obra</label>
+              <div class="col-md-10">
+                 <input class="form-control" type="text" placeholder="Descrição da situação da obra" formControlName="description" />
+                 <span class="help-block" *ngIf="editDisplayMessage.description">
+                    <p [innerHTML]="editDisplayMessage.description"></p>
+                 </span>
+                             </div>
+            </div>
+            <div class="form-group" [ngClass]="{'has-error': editDisplayMessage.status }">
+              <label class="col-md-2 control-label">Status</label>
+              <div class="col-md-10">
+                <select class="form-control" value="{{ situation.status }}" formControlName="status" aria-invalid="false">
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                    <span class="help-block" *ngIf="editDisplayMessage.status">
+                    <p [innerHTML]="editDisplayMessage.status"></p>
+                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-offset-2 col-md-10">
+            <span><button class="btn btn-success" type="button" (click)='updateSituation()' [disabled]='!editformSituation.valid'>Salvar</button></span>
+            <input type="button" class="btn btn-info" value="Cancelar" (click)='hideModal()' />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
