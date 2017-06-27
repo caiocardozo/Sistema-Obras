@@ -98,8 +98,8 @@ export class CrudSituationComponent implements OnInit, AfterViewInit {
       this.displayMessage = this.genericValidator.processMessages(this.formSituation);
     });
 
-     Observable.merge(this.editformSituation.valueChanges, ...controlBlurs).debounceTime(3000).subscribe(value => {
-      this.editDisplayMessage = this.genericValidator.processMessages(this.editformSituation);
+    Observable.merge(this.editformSituation.valueChanges, ...controlBlurs).debounceTime(3000).subscribe(value => {
+      this.editDisplayMessage = this.editGenericValidator.processMessages(this.editformSituation);
     });
   }
 

@@ -10,19 +10,17 @@
         <div class="box-header with-border">
           <h3 class="box-title">Cadastrar</h3>
         </div>
-        <form novalidate (ngSubmit)="insert()" [formGroup]="formtoInspection">
+        <form novalidate (ngSubmit)="insertTOInspection()" [formGroup]="formtoInspection">
           <div class="box-body">
-            <div class="form-group">
-              <div class="col-md-12" [ngClass]="{'has-error': displayMessage.description }">
-                <label class="control-label">Nome</label>
-                <input type="text" class="form-control" id="description" placeholder="Descrição do tipo de obra" formControlName="description">
-                <span class="help-block" *ngIf="displayMessage.description">
-                    <p [innerHTML]="displayMessage.description"></p>
-                 </span>
-              </div>
+            <div class="form-group" [ngClass]="{'has-error': displayMessage.description }">
+              <label class="control-label">Descrição</label>
+              <input type="text" class="form-control" id="description" placeholder="Descrição da situação" formControlName="description">
+              <span class="help-block" *ngIf="displayMessage.description">
+                <p [innerHTML]="displayMessage.description"></p>
+              </span>
             </div>
             <div class="box-footer">
-              <button type="button" class="btn btn-primary  pull-right" [disabled]="!formtoInspection.valid">Inserir</button>
+              <button type="button" class="btn btn-primary  pull-right" (click)="insertTOInspection()" [disabled]="!formtoInspection.valid">Inserir</button>
             </div>
           </div>
         </form>
@@ -55,25 +53,25 @@
                 <th class="text-center">Apagar</th>
                 <th class="text-center">Editar</th>
               </tr>
-              <tr *ngFor="let typeOfInspection of typeOfInspections">
-                <td>{{ typeOfInspection.id }} </td>
-                <td>{{ typeOfInspection.description }}</td>
-                <td class="text-center" *ngIf="typeOfInspection.status === 'Ativo'">
+              <tr *ngFor="let tOInspection of typeOfInspections">
+                <td>{{ tOInspection.id }} </td>
+                <td>{{ tOInspection.description }}</td>
+                <td class="text-center" *ngIf="tOInspection.status === 'Ativo'">
                   <span class="label label-success">Ativo</span>
                 </td>
-                <td class="text-center" *ngIf="typeOfInspection.status === 'Inativo'">
+                <td class="text-center" *ngIf="tOInspection.status === 'Inativo'">
                   <span class="label label-danger">Inativo</span>
                 </td>
-                <td class="text-center">{{ typeOfInspection.dateOfGeneration | date: 'dd/MM/yyyy' }}</td>
-                <td class="text-center">{{ typeOfInspection.userIdRegistered }}</td>
+                <td class="text-center">{{ tOInspection.dateOfGeneration | date: 'dd/MM/yyyy' }}</td>
+                <td class="text-center">{{ tOInspection.userIdRegistered }}</td>
                 <td class="text-center">
-                  <a class="btn btn-social-icon btn-preto" (click)="updateStatus(typeOfInspection.id)"><i class="fa  fa-history"></i></a>
+                  <a class="btn btn-social-icon btn-preto" (click)="updateStatus(tOInspection.id)"><i class="fa  fa-history"></i></a>
                 </td>
                 <td class="text-center">
-                  <a class="btn btn-social-icon btn-google" (click)="remove(typeOfInspection.id)"><i class="fa fa-trash"></i></a>
+                  <a class="btn btn-social-icon btn-google" (click)="remove(tOInspection.id)"><i class="fa fa-trash"></i></a>
                 </td>
                 <td class="text-center">
-                  <a class="btn btn-social-icon btn-verde"><i class="fa fa-edit"></i></a>
+                  <a class="btn btn-social-icon btn-verde" (click)="showModal(tOInspection)"><i class="fa fa-edit"></i></a>
                 </td>
               </tr>
             </tbody>
@@ -84,4 +82,55 @@
       <!-- /.box -->
     </div>
   </section>
+</div>
+<div id="myModal" class="modal fade in" [ngStyle]="{'display': modalVisible ? 'block' : 'none'}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button (click)='hideModal()' type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Fechar</span>
+        </button>
+        <h4 class="modal-title">Editar tipo de fiscalização</h4>
+      </div>
+      <form novalidate (ngSubmit)="updateTOInspection()" [formGroup]="editFormtoInspection">
+        <div class="modal-body">
+          <div class="form-horizontal">
+            <div class="alert alert-danger" *ngIf="errors.length > 0">
+              <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+              <ul>
+                <li *ngFor="let error of errors">{{ error }}</li>
+              </ul>
+            </div>
+            <div class="form-group" [ngClass]="{'has-error': editDisplayMessage.description }">
+              <label class="col-md-2 control-label">Descrição do tipo de fiscalização</label>
+              <div class="col-md-10">
+                <input class="form-control" type="text" placeholder="Descrição da situação da obra" formControlName="description" />
+                <span class="help-block" *ngIf="editDisplayMessage.description">
+                    <p [innerHTML]="editDisplayMessage.description"></p>
+                 </span>
+              </div>
+            </div>
+            <div class="form-group" [ngClass]="{'has-error': editDisplayMessage.status }">
+              <label class="col-md-2 control-label">Status</label>
+              <div class="col-md-10">
+                <select class="form-control" value="{{ typeOfInspection.status }}" formControlName="status" aria-invalid="false">
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                <span class="help-block" *ngIf="editDisplayMessage.status">
+                    <p [innerHTML]="editDisplayMessage.status"></p>
+                 </span>
+              </div>
+            </div>
+          </div>|
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-offset-2 col-md-10">
+            <span><button class="btn btn-success" type="button" (click)='updateTOInspection()' [disabled]='!editFormtoInspection.valid'>Salvar</button></span>
+            <input type="button" class="btn btn-info" value="Cancelar" (click)='hideModal()' />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

@@ -8,6 +8,8 @@ import { CrudTypeOfConstructionComponent } from './pages/typeofconstruction/crud
 import { CrudNatureOfObservationComponent } from './pages/natureofobservation/crud-natureofobservation/crud-natureofobservation.component';
 import { CrudTypeOfContractComponent } from './pages/typeofcontract/crud-typeofcontract/crud-typeofcontract.component';
 import { CrudTypeOfBondComponent } from './pages/typeofbond/crud-typeofbond/crud-typeofbond.component';
+import { CrudTypeOfInspectionComponent } from './pages/typeofinspection/crud-typeofinspection/crud-typeofinspection.component';
+import { CrudDocumentTypeConstructionComponent } from './pages/documenttypeconstruction/crud-documenttypeconstruction/crud-documenttypeconstruction.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent },
@@ -18,6 +20,8 @@ const appRoutes: Routes = [
     { path: 'tipocontrato', component: CrudTypeOfContractComponent },
     { path: 'naturezaobs', component: CrudNatureOfObservationComponent },
     { path: 'tipocaucao', component: CrudTypeOfBondComponent },
+    { path: 'tipofiscalizacao', component: CrudTypeOfInspectionComponent },
+    { path: 'tipodocumento', component: CrudDocumentTypeConstructionComponent },
 ];
 
 export const RoutingProviders: any[] = [];

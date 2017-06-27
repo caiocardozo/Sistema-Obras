@@ -40,7 +40,6 @@ export class SituationService extends ServiceBase {
       .map((res: Response) => res.json());
   }
 
-
   getSituation(id: string): Promise<Situation> {
     return this.http.get(environment.serviceUrl + `api/v1/situation/${id}`)
       .toPromise()

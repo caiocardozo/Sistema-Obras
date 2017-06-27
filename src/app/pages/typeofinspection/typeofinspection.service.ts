@@ -1,3 +1,4 @@
+import { ServiceBase } from 'app/pages/shared/service-base';
 import { UserService } from './../shared/user/user.service';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
@@ -8,12 +9,13 @@ import { TypeOfInspection } from './typeofinspection';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
-export class TypeOfInspectionService {
+export class TypeOfInspectionService extends ServiceBase{
   headers = new Headers();
 
   constructor(
     private http: Http,
     private userService: UserService) {
+    super()
     this.headers = new Headers({ 'Content-Type': 'application/json' });
   }
 
@@ -26,12 +28,6 @@ export class TypeOfInspectionService {
 
   updateStatusTypeOfInspection(id: number): Promise<TypeOfInspection> {
     return this.http.put(`http://apiobras/api/v1/typeofinspection/status/${id}`, { id: id }, { headers: this.headers })
-      .toPromise().then(res => res.json());
-  }
-
-  updateTypeOfInspection(data: TypeOfInspection): Promise<TypeOfInspection> {
-    return this.http.put(`http://apiobras/api/v1/typeofinspection/${data.id}`,
-      JSON.stringify(data), { headers: this.headers })
       .toPromise().then(res => res.json());
   }
 
@@ -51,5 +47,14 @@ export class TypeOfInspectionService {
     return this.http
       .delete(environment.serviceUrl + 'api/v1/typeofinspection/' + data)
       .map((res: Response) => res.json());
+  }
+
+   updateTypeOfInspection(data: TypeOfInspection): Observable<TypeOfInspection> {
+    let response = this.http
+      .put(`http://apiobras/api/v1/typeofinspection/${data.id}`,
+      JSON.stringify(data), { headers: this.headers })
+      .map(super.extractData)
+      .catch(super.serviceError);
+    return response;
   }
 }
