@@ -34,11 +34,11 @@ export class SituationService extends ServiceBase {
       .toPromise().then(res => res.json());
   }
 
-  getAllSituation() {
-    return this.http
-      .get(environment.serviceUrl + `api/v1/situation`)
-      .map((res: Response) => res.json());
-  }
+  //getAllSituation() {
+   // return this.http
+    //  .get(environment.serviceUrl + `api/v1/situation`)
+     // .map((res: Response) => res.json());
+  //}
 
   getSituation(id: string): Promise<Situation> {
     return this.http.get(environment.serviceUrl + `api/v1/situation/${id}`)
@@ -59,5 +59,12 @@ export class SituationService extends ServiceBase {
       .map(super.extractData)
       .catch(super.serviceError);
     return response;
+  }
+
+   getAllSituation(): Observable<Situation[]> {
+    return this.http
+      .get(environment.serviceUrl + `api/v1/situation`)
+      .map((res: Response) => <Situation[]>res.json())
+      .catch(super.serviceError);
   }
 }

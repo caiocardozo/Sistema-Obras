@@ -183,8 +183,8 @@ export class ManagerworkComponent implements OnInit, AfterViewInit {
     this.biddingService.getAllBiddingsConstruction()
       .subscribe(
       result => {
-        this.biddingsConstruction = result
-       this.toastr.info('Licitações carregadas!', 'Sucesso');
+        this.biddingsConstruction = result,
+        this.toastr.info('Licitações carregadas!', 'Sucesso');
            },
       error => { this.errors = JSON.parse(error._body).errors }
       );

@@ -1,3 +1,5 @@
+import { Campus } from './../campus/campus';
+import { TypeOfInspection } from './../typeofinspection/typeofinspection';
 import { TypeOfConstruction } from './../typeofconstruction/typeofconstruction';
 import { Situation } from './../situation/situation';
 
@@ -22,5 +24,6 @@ export class Construction {
     userIdUpdated: number;
     situation: Situation;
     typeOfConstruction: TypeOfConstruction;
-
+    typeOfInspection: TypeOfInspection;
+    camp: Campus;
 }

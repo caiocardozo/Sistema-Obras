@@ -1,3 +1,75 @@
-<p>
-  list-construction works!
-</p>
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="box-footer">
+      <div class="col-lg-10">
+        <h4>
+          Obra : {{ localBd }}
+        </h4>
+      </div>
+      <div class="col-lg-offset-10">
+        <a class="btn btn-primary pull-right" [routerLink]="['/cadastrarobra']"><i class="fa fa-plus"></i> Nova obra</a>
+      </div>
+    </div>
+  </section>
+  <section class="content-header">
+    <div class="col-lg-12">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Lista de obras</h3>
+          <div class="box-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+              <div class="input-group-btn">
+                <input type="text" placeholder="name">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-body no-padding">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th class="text-center">Situação</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Data inicio</th>
+                <th class="text-center">Data fim</th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let construction of constructions">
+                <td>{{ construction.id }} </td>
+                <td>{{ construction.name }}</td>
+                <td>{{ construction.situation.description }} </td>
+                <td>{{ construction.typeOfConstruction.description }} </td>
+                <td>{{ construction.startDate | date: 'dd/MM/yyyy'}}</td>
+                <td>{{ construction.endDate | date: 'dd/MM/yyyy'}}</td>
+                <td class="text-center">
+                  <a [routerLink]="['/obra/detalhes', construction.id]" title="Detalhes" class="btn btn-primary">
+                <span class="glyphicon glyphicon-search"></span>
+              </a>
+               </td>
+              <td class="text-center">
+                  <a [routerLink]="['/obra/detalhes', construction.id]" title="Editar" class="btn btn-warning">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+               </td>
+              <td class="text-center">
+                  <a [routerLink]="['/obra/detalhes', construction.id]" title="Excluir" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>
+              </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+  </section>
+</div>
