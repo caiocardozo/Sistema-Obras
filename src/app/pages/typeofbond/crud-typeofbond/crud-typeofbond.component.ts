@@ -28,7 +28,7 @@ export class CrudTypeOfBondComponent implements OnInit, AfterViewInit {
   public errors: any[] = [];
   typeOfBond: TypeOfBond;
   typeofbonds: TypeOfBond[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(
     private fb: FormBuilder,

@@ -26,7 +26,7 @@ export class CrudTypeOfConstructionComponent implements OnInit, AfterViewInit {
   public errors: any[] = [];
   typeOfConstruction: TypeOfConstruction;
   typeofconstructions: TypeOfConstruction[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(
     private fb: FormBuilder,

@@ -34,13 +34,13 @@ import { Supervisor } from './../supervisor/supervisor';
 export class ManagerworkComponent implements OnInit, AfterViewInit {
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
-  private myDatePickerOptions: IMyOptions = {
+  public myDatePickerOptions: IMyOptions = {
     todayBtnTxt: 'Hoje',
     dateFormat: 'dd/mm/yyyy',
     dayLabels: { su: 'Dom', mo: 'Seg', tu: 'Ter', we: 'Qua', th: 'Qui', fr: 'Sex', sa: 'Sab' },
     monthLabels: { 1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto', 9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro' },
-
   };
+
   select: string;
   localBd: string;
   public errors: any[] = [];
@@ -52,16 +52,17 @@ export class ManagerworkComponent implements OnInit, AfterViewInit {
   contractId: number;
   typeOfContractId: number;
   apportionmentId: number;
-  private modalVisible: boolean;
-  private modalContractVisible: boolean;
-  private modalContractAVisible: boolean;
-  private modalMeasurementVisible: boolean;
-  private modalMeasurementsVisible: boolean;
+  public modalVisible: boolean;
+  public modalContractVisible: boolean;
+  public modalEditContractVisible: boolean;
+  public modalContractAVisible: boolean;
+  public modalMeasurementVisible: boolean;
+  public modalMeasurementsVisible: boolean;
   biddingApportionmentForm: FormGroup;
   contractForm: FormGroup;
   contractAForm: FormGroup;
   measurementForm: FormGroup;
-  displayMessage: { [key: string]: string } = {};
+  public displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } };
   private validationMessagesContract: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
@@ -110,7 +111,7 @@ export class ManagerworkComponent implements OnInit, AfterViewInit {
       //validations Measurement
       supervisorId: { required: 'O supervisor é obrigatório.' },
       date: { required: 'A data é obrigatória' },
-      value: { required: 'O valor é obrigatório' },
+      amount: { required: 'O valor é obrigatório' },
       chit: { required: 'O número da nota fiscal é obrigatório.' },
       chitSeries: { required: 'A série é obrigatória' }
     };
@@ -160,7 +161,7 @@ export class ManagerworkComponent implements OnInit, AfterViewInit {
     this.measurementForm = this.fb.group({
       supervisorId: ['', [Validators.required]],
       date: ['', [Validators.required]],
-      value: ['', [Validators.required]],
+      amount: ['', [Validators.required]],
       comments: ['', [Validators.required]],
       chit: ['', [Validators.required]],
       chitSeries: ['', [Validators.required]],
@@ -249,7 +250,6 @@ export class ManagerworkComponent implements OnInit, AfterViewInit {
     this.modalMeasurementsVisible = true;
     this.apportionmentId = idApportionment;
   }
-
 
   public hideModal(modal: string): void {
     if (modal == 'rateioLic')

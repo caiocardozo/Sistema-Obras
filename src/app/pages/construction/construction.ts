@@ -12,10 +12,11 @@ export class Construction {
     campId: number;
     typeOfConstructionId: number;
     situationId: number;
-    typeInspectionId: number;
-    startDate: string;
-    endDate: string;
-    contractTerminationDate: string;
+    typeOfInspectionId: number;
+    startDate: Date;
+    endDate: Date;
+    contractTerminationDate: Date;
+    signatureDate: Date;
     area: number;
     estimatedValue: number;
     dateOfGeneration: Date;

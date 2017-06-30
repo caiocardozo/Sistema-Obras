@@ -36,16 +36,13 @@ export class DetailsConstructionComponent implements OnInit {
     this.constructionService.getConstruction(this.constructionId)
       .subscribe(
       construction => {
-        this.construction = construction,
-        console.log(construction);
+        this.construction = construction
       },
       response => {
         if (response.status == 404) {
           this.router.navigate(['NotFound']);
         }
       });
-
-
   }
 
   goBack(): void {

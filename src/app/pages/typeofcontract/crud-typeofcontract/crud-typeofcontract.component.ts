@@ -26,7 +26,7 @@ export class CrudTypeOfContractComponent implements OnInit, AfterViewInit {
   public errors: any[] = [];
   typeOfContract: TypeOfContract;
   typeOfContracts: TypeOfContract[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(
     private fb: FormBuilder,

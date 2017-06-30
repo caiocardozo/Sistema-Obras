@@ -27,7 +27,7 @@ export class CrudDocumentTypeConstructionComponent implements OnInit, AfterViewI
   public errors: any[] = [];
   documentTypeConstruction: DocumentTypeConstruction;
   documentTypeConstructions: DocumentTypeConstruction[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(
     private fb: FormBuilder,

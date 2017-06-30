@@ -27,7 +27,7 @@ export class CrudNatureOfObservationComponent implements OnInit, AfterViewInit {
   public errors: any[] = [];
   natureOfObservation: NatureOfObservation;
   natureOfObservations: NatureOfObservation[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(
     private fb: FormBuilder,

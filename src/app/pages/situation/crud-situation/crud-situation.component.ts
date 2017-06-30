@@ -27,7 +27,7 @@ export class CrudSituationComponent implements OnInit, AfterViewInit {
   public errors: any[] = [];
   situation: Situation;
   situations: Situation[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(
     private fb: FormBuilder,

@@ -26,7 +26,7 @@ export class CrudTypeOfInspectionComponent implements OnInit, AfterViewInit {
   public errors: any[] = [];
   typeOfInspection: TypeOfInspection;
   typeOfInspections: TypeOfInspection[] = [];
-  private modalVisible: boolean;
+  public modalVisible: boolean;
 
   constructor(private fb: FormBuilder,
     private typeOfInspectionService: TypeOfInspectionService,

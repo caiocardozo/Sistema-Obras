@@ -1,19 +1,16 @@
-import { GenericValidator } from './../../../utils/generic-form-validator';
-import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef, ViewContainerRef, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChildren, ElementRef, ViewContainerRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, FormArray, Validators, FormControlName } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
-import { IMyOptions } from 'mydatepicker';
-import { ToastsManager, Toast } from 'ng2-toastr/ng2-toastr';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { ToastsManager, Toast } from 'ng2-toastr/ng2-toastr';
+import { IMyOptions } from "mydatepicker";
 
 import { CampusService } from './../../campus/campus.service';
 import { TypeOfConstructionService } from './../../typeofconstruction/typeofconstruction.service';
@@ -27,21 +24,19 @@ import { TypeOfInspection } from './../../typeofinspection/typeofinspection';
 import { Construction } from './../construction';
 import { Situation } from './../../situation/situation';
 
+import { DateUtils } from './../../../common/data-type-utils/date-utils';
+import { CurrencyUtils } from './../../../common/data-type-utils/currency-utils';
+import { GenericValidator } from './../../../utils/generic-form-validator';
+
 @Component({
-  selector: 'add-construction',
-  templateUrl: './add-construction.component.html',
-  styleUrls: ['./add-construction.component.css']
+  selector: 'edit-construction',
+  templateUrl: './edit-construction.component.html',
+  styleUrls: ['./edit-construction.component.css']
 })
-export class AddConstructionComponent implements OnInit, AfterViewInit {
+export class EditConstructionComponent implements OnInit, AfterViewInit {
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
-  private myDatePickerOptions: IMyOptions = {
-    todayBtnTxt: 'Hoje',
-    dateFormat: 'dd/mm/yyyy',
-    dayLabels: { su: 'Dom', mo: 'Seg', tu: 'Ter', we: 'Qua', th: 'Qui', fr: 'Sex', sa: 'Sab' },
-    monthLabels: { 1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto', 9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro' },
-
-  };
+  public myDatePickerOptions = DateUtils.getMyDatePickerOptions();
 
   public errors: any[] = [];
   constructionForm: FormGroup;
@@ -50,6 +45,8 @@ export class AddConstructionComponent implements OnInit, AfterViewInit {
   typeOfInspections: TypeOfInspection[];
   typeOfConstructions: TypeOfConstruction[];
   campi: Campus[];
+  constructionId: string = "";
+  private sub: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -60,6 +57,7 @@ export class AddConstructionComponent implements OnInit, AfterViewInit {
     private campusService: CampusService,
     private location: Location,
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastsManager,
     vcr: ViewContainerRef) {
 
@@ -90,7 +88,7 @@ export class AddConstructionComponent implements OnInit, AfterViewInit {
       situationId: {
         required: 'Informe a situação'
       },
-      typeInspectionId: {
+      typeOfInspectionId: {
         required: 'Informe o tipo fiscalização'
       },
       area: {
@@ -105,7 +103,7 @@ export class AddConstructionComponent implements OnInit, AfterViewInit {
     this.construction = new Construction();
   }
 
-  public displayMessage: { [key: string]: string } = {};
+  displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
 
@@ -117,13 +115,20 @@ export class AddConstructionComponent implements OnInit, AfterViewInit {
       campId: ['', Validators.required],
       typeOfConstructionId: ['', Validators.required],
       situationId: ['', Validators.required],
-      typeInspectionId: ['', Validators.required],
+      typeOfInspectionId: ['', Validators.required],
       startDate: [''],
       endDate: [''],
+      signatureDate: [''],
       contractTerminationDate: '',
       area: ['', Validators.required],
       estimatedValue: ['', Validators.required]
     });
+
+    this.sub = this.route.params.subscribe(
+      params => {
+        this.constructionId = params['id'];
+        this.getConstruction(this.constructionId);
+      });
 
     this.getSituations();
     this.getTypeOfInspections();
@@ -176,55 +181,70 @@ export class AddConstructionComponent implements OnInit, AfterViewInit {
     });
   }
 
-  addConstruction() {
+  getConstruction(id: string) {
+    this.constructionService.getConstruction(id)
+      .subscribe(
+      construction => {
+        this.fillFormConstruction(construction)
+      },
+      response => {
+        if (response.status == 404) {
+          this.router.navigate(['NotFound']);
+        }
+      });
+  }
+
+  fillFormConstruction(construction: Construction): void {
+    this.construction = construction;
+
+    let valorBrl = CurrencyUtils.ToPrice(this.construction.estimatedValue);
+
+    this.constructionForm.patchValue({
+      nickname: this.construction.nickname,
+      description: this.construction.description,
+      name: this.construction.name,
+      campId: this.construction.campId,
+      typeOfConstructionId: this.construction.typeOfConstructionId,
+      situationId: this.construction.situationId,
+      typeOfInspectionId: this.construction.typeOfInspectionId,
+      startDate: DateUtils.setMyDatePickerDate(this.construction.startDate),
+      endDate: DateUtils.setMyDatePickerDate(this.construction.endDate),
+      signatureDate: DateUtils.setMyDatePickerDate(this.construction.signatureDate),
+      contractTerminationDate: DateUtils.setMyDatePickerDate(this.construction.contractTerminationDate),
+      area: this.construction.area,
+      estimatedValue: valorBrl
+    });
+  }
+  editconstruction(){
     if (this.constructionForm.dirty && this.constructionForm.valid) {
-      //let user = this.eventoService.obterUsuario();
-      let p = Object.assign({}, this.construction, this.constructionForm.value)
-      this.constructionService.registerConstruction(p)
+      let p = Object.assign({}, this.construction, this.constructionForm.value);
+      p.startDate = DateUtils.getMyDatePickerDate(p.startDate);
+      p.endDate = DateUtils.getMyDatePickerDate(p.endDate);
+      p.contractTerminationDate = DateUtils.getMyDatePickerDate(p.contractTerminationDate);
+      p.estimatedValue =  CurrencyUtils.ToDecimal(p.estimatedValue);
+      p.signatureDate = DateUtils.getMyDatePickerDate(p.signatureDate);
+      this.constructionService.updateConstruction(p)
         .subscribe(
         result => { this.onSaveComplete() },
-        error => { this.onError(error); });
+        error => {
+          this.errors = JSON.parse(error._body).errors
+        });
     }
   }
 
-  onError(error) {
-    this.errors = JSON.parse(error._body).errors;
-    this.toastr.warning('Erro ao cadastrar Obra!', 'Alerta!');
-  }
+   onSaveComplete(): void {
+    this.errors = [];
 
-  onSaveComplete(): void {
-    this.toastr.success('Obra cadastrada!', 'Sucesso', { dismiss: 'controlled' })
+    this.toastr.success('Obra Atualizada com Sucesso!', 'Sucesso', { dismiss: 'controlled' })
       .then((toast: Toast) => {
         setTimeout(() => {
           this.toastr.dismissToast(toast);
           this.router.navigate(['/obra']);
         }, 2500);
       });
-    this.constructionForm.reset()
-    this.constructionForm.setValue({ startDate: '' });
-    this.errors = [];
   }
 
   goBack(): void {
     this.location.back();
-  }
-
-  setDate(): void {
-    // Set today date using the setValue function
-    let date = new Date();
-    this.constructionForm.setValue({
-      startDate: {
-        date: {
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate()
-        }
-      }
-    });
-  }
-
-  clearDate(): void {
-    // Clear the date using the setValue function
-    this.constructionForm.setValue({ startDate: '' });
   }
 }

@@ -7,7 +7,7 @@
         </h4>
       </div>
       <div class="col-lg-offset-10">
-        <a class="btn btn-primary pull-right" [routerLink]="['/cadastrarobra']"><i class="fa fa-plus"></i> Nova obra</a>
+        <a class="btn btn-primary pull-right" [routerLink]="['/obra/adicionar']"><i class="fa fa-plus"></i> Nova obra</a>
       </div>
     </div>
   </section>
@@ -54,7 +54,7 @@
               </a>
                </td>
               <td class="text-center">
-                  <a [routerLink]="['/obra/detalhes', construction.id]" title="Editar" class="btn btn-warning">
+                  <a [routerLink]="['/obra/editar', construction.id]" title="Editar" class="btn btn-warning">
                 <span class="glyphicon glyphicon-pencil"></span>
               </a>
                </td>

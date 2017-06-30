@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  serviceUrl: 'http://apiobras/'
+  serviceUrl: 'http://www.apiobras/'
 };

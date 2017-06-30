@@ -1,4 +1,4 @@
 export class Campus {
-  id: number;
-  city: string;
+  id:number;
+  city:string;
 }

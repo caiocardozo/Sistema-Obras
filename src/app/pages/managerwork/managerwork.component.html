@@ -277,9 +277,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="control-label">Assinatura</label>
-                                                <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
                                                 <my-date-picker name="signatureDate" [options]="myDatePickerOptions" formControlName="signatureDate"></my-date-picker>
-                                                <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
                                                 <span class="help-block" *ngIf="displayMessage.signatureDate">
                                                         <p [innerHTML]="displayMessage.signatureDate"></p>
                                                     </span>
@@ -290,9 +288,7 @@
                                                 <div [ngClass]="{'has-error': displayMessage.contractDuration }">
                                                     <div class="col-md-3">
                                                         <label class="control-label">Duração</label>
-                                                        <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
                                                         <my-date-picker name="contractDuration" [options]="myDatePickerOptions" formControlName="contractDuration"></my-date-picker>
-                                                        <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
                                                         <span class="help-block" *ngIf="displayMessage.contractDuration">
                                                             <p [innerHTML]="displayMessage.contractDuration"></p>
                                                         </span>
@@ -398,8 +394,7 @@
                                             </div>
                                             <div class="col-md-4" [ngClass]="{'has-error': displayMessage.apportionmentValue }">
                                                 <label class="control-label">Valor do rateio</label>
-                                                <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue" value="{{ apportionmentValue | currency:'BRL':true }}"
-                                                />
+                                                <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue"/>
                                                 <span class="help-block" *ngIf="displayMessage.apportionmentValue">
                                             <p [innerHTML]="displayMessage.apportionmentValue"></p>
                                     </span>
@@ -488,19 +483,16 @@
                                             <div [ngClass]="{'has-error': displayMessage.date }">
                                                 <div class="col-md-3">
                                                     <label class="control-label">Data</label>
-                                                    <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
                                                     <my-date-picker name="date" [options]="myDatePickerOptions" formControlName="date"></my-date-picker>
-                                                    <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
                                                     <span class="help-block" *ngIf="displayMessage.date">
                                                     <p [innerHTML]="displayMessage.date"></p>
                                             </span>
                                                 </div>
-                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.value }">
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.amount }">
                                                     <label class="control-label">Valor</label>
-                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="value" value="{{ value | currency:'BRL':true }}"
-                                                    />
-                                                    <span class="help-block" *ngIf="displayMessage.value">
-                                                <p [innerHTML]="displayMessage.value"></p>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="amount"/>
+                                                    <span class="help-block" *ngIf="displayMessage.amount">
+                                                <p [innerHTML]="displayMessage.amount"></p>
                                             </span>
                                                 </div>
                                             </div>
@@ -575,7 +567,7 @@
                                             <tr *ngFor="let measurement of measurements">
                                                 <td class="text-left">{{ measurement.supervisor.name }}</td>
                                                 <td class="text-left">{{ measurement.date | date: 'dd/MM/yyyy' }}</td>
-                                                <td class="text-center">{{ measurement.value }}</td>
+                                                <td class="text-center">{{ measurement.amount }}</td>
                                                 <td class="text-center">{{ measurement.apportionmentCode }}</td>
                                                 <td class="text-center">{{ measurement.chit }}</td>
                                                 <td class="text-center">{{ measurement.chitSeries }}</td>
@@ -639,9 +631,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="control-label">Assinatura</label>
-                                                <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
                                                 <my-date-picker name="signatureDate" [options]="myDatePickerOptions" formControlName="signatureDate"></my-date-picker>
-                                                <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
                                                 <span class="help-block" *ngIf="displayMessage.signatureDate">
                                                         <p [innerHTML]="displayMessage.signatureDate"></p>
                                                     </span>
@@ -652,9 +642,7 @@
                                                 <div [ngClass]="{'has-error': displayMessage.contractDuration }">
                                                     <div class="col-md-3">
                                                         <label class="control-label">Duração</label>
-                                                        <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
                                                         <my-date-picker name="contractDuration" [options]="myDatePickerOptions" formControlName="contractDuration"></my-date-picker>
-                                                        <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
                                                         <span class="help-block" *ngIf="displayMessage.contractDuration">
                                                             <p [innerHTML]="displayMessage.contractDuration"></p>
                                                         </span>
@@ -760,8 +748,7 @@
                                             </div>
                                             <div class="col-md-4" [ngClass]="{'has-error': displayMessage.apportionmentValue }">
                                                 <label class="control-label">Valor do rateio</label>
-                                                <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue" value="{{ apportionmentValue | currency:'BRL':true }}"
-                                                />
+                                                <input class="form-control" type="text" placeholder="0,0" formControlName="apportionmentValue"/>
                                                 <span class="help-block" *ngIf="displayMessage.apportionmentValue">
                                             <p [innerHTML]="displayMessage.apportionmentValue"></p>
                                     </span>
@@ -850,19 +837,16 @@
                                             <div [ngClass]="{'has-error': displayMessage.date }">
                                                 <div class="col-md-3">
                                                     <label class="control-label">Data</label>
-                                                    <!--<input class="form-control" type="text" placeholder="" formControlName="startDate" />-->
                                                     <my-date-picker name="date" [options]="myDatePickerOptions" formControlName="date"></my-date-picker>
-                                                    <!--<my-date-picker name="dataInicio" [options]="myDatePickerOptions" formControlName="dataInicio"></my-date-picker>-->
                                                     <span class="help-block" *ngIf="displayMessage.date">
                                                     <p [innerHTML]="displayMessage.date"></p>
                                             </span>
                                                 </div>
-                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.value }">
+                                                <div class="col-md-4" [ngClass]="{'has-error': displayMessage.amount }">
                                                     <label class="control-label">Valor</label>
-                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="value" value="{{ value | currency:'BRL':true }}"
-                                                    />
-                                                    <span class="help-block" *ngIf="displayMessage.value">
-                                                <p [innerHTML]="displayMessage.value"></p>
+                                                    <input class="form-control" type="text" placeholder="0,0" formControlName="amount"/>
+                                                    <span class="help-block" *ngIf="displayMessage.amount">
+                                                <p [innerHTML]="displayMessage.amount"></p>
                                             </span>
                                                 </div>
                                             </div>
@@ -937,7 +921,7 @@
                                             <tr *ngFor="let measurement of measurements">
                                                 <td class="text-left">{{ measurement.supervisor.name }}</td>
                                                 <td class="text-left">{{ measurement.date | date: 'dd/MM/yyyy' }}</td>
-                                                <td class="text-center">{{ measurement.value }}</td>
+                                                <td class="text-center">{{ measurement.amount }}</td>
                                                 <td class="text-center">{{ measurement.apportionmentCode }}</td>
                                                 <td class="text-center">{{ measurement.chit }}</td>
                                                 <td class="text-center">{{ measurement.chitSeries }}</td>

@@ -7,7 +7,7 @@ export class Measurement {
     contractId: number;
     supervisorId: number;
     date: Date;
-    value: number;
+    amount: number;
     comments: string;
     apportionmentCode: number;
     chit: number;

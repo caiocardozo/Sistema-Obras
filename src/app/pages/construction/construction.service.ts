@@ -4,7 +4,6 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
@@ -53,6 +52,16 @@ export class ConstructionService extends ServiceBase {
             .map(super.extractData)
             .catch(super.serviceError);
 
+        return response;
+    }
+
+    updateConstruction(construction: Construction): Observable<Construction> {
+        //let options = super.obterAuthHeader();
+        construction.userIdRegistered = this.userService.getuserid();
+        let response = this.http
+            .put(environment.serviceUrl + `api/v1/construction/${construction.id}`, construction)
+            .map(super.extractData)
+            .catch(super.serviceError);
         return response;
     }
 }
