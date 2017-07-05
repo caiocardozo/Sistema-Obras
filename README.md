@@ -4,7 +4,7 @@ O que é este projeto?
 =====================
 Sistema-obras é um projeto open source desenvolvido em Angular 4.
 
-O objetivo deste projeto é a tecnologia Angular 4 utilizando o ferramental do [Angular-CLI](https://github.com/angular/angular-cli) e compartilhar com a comunidade técnica a melhor forma de desenvolver aplicativos front-end utilizando AngularJS.
+O objetivo deste projeto é demonstrar a tecnologia Angular 4 com o ferramental do [Angular-CLI](https://github.com/angular/angular-cli) e compartilhar com a comunidade técnica a melhor forma de desenvolver aplicativos front-end utilizando AngularJS.
 
 ## Versão:
 O projeto esta na versão 2.0.2
