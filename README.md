@@ -6,6 +6,8 @@ Sistema-obras é um projeto open source desenvolvido em Angular 4.
 
 O objetivo deste projeto é a tecnologia Angular 4 utilizando o ferramental do [Angular-CLI](https://github.com/angular/angular-cli) e compartilhar com a comunidade técnica a melhor forma de desenvolver aplicativos front-end utilizando AngularJS.
 
+## Versão:
+O projeto esta na versão 2.0.2
 ## Como utilizar:
 Você pode utilizar uma das IDEs [Visual Studio Code](https://code.visualstudio.com/), [Atom](https://atom.io/),[Sublime](https://www.sublimetext.com/) ou outro de sua escolha. Eu gosto e utilizo o VSCode, por conta de já ter um bom suporte ao TypeScript e por ter o [pacote de plugins](https://marketplace.visualstudio.com/items?itemName=loiane.angular-extension-pack) para o VSCode para projetos Angular (versões 2 e 4) da [Loiane Groner](http://loiane.com/).
 
@@ -20,14 +22,11 @@ Você pode utilizar uma das IDEs [Visual Studio Code](https://code.visualstudio.
 - [Plugins para VSCode](https://marketplace.visualstudio.com/items?itemName=loiane.angular-extension-pack)
 - Thema HTML [Admin LTE 2](https://github.com/almasaeed2010/AdminLTE/releases)
 
-## Architecture:
+## Principais características do sistema:
 
-- Full architecture with responsibility separation concerns, SOLID and Clean Code
-- Domain Driven Design (Layers and Domain Model Pattern)
-- Domain Events
-- Domain Notification
-- CQRS (Imediate Consistency)
-- Event Sourcing
+- Aplicação separada por funcionalidade.
+- Utilização de Lazy loading para carregar modulos separados.
+- Notificações com ng2-toastr.
 
 ## Sobre:
 O Projeto Sistema-Obras foi desenvolvido por Caio Cardozo.
